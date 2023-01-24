@@ -46,8 +46,9 @@ namespace realworldProject.Controllers
         }
         [HttpGet]
         [Route("articles")]
-        public ActionResult GetArticlesWithParamsHandler()
+        public async Task<ActionResult> GetArticlesWithParamsHandler([FromQuery] string author, [FromQuery] string tag, [FromQuery] string favorited)
         {
+            List<ArticleResponse> article = new List<ArticleResponse>();
             string token = Request.Headers["Authorization"];
             if (!AuthRepo.isAuthenticated(token))
             {
@@ -58,26 +59,22 @@ namespace realworldProject.Controllers
                 return BadRequest("you are not Authorized");
             }
             var user = ServicesRepo.GetCurrentUser(token);
-            List<ArticleResponse> article;
+            var x = Request.QueryString.Value.Split('=');
             
-            if (Request.Query["author"] != string.Empty)
-            {
-                article = GetArticlesHendler.GetArticlesByAuthor(Request.Query["author"], user);
-            }
-            else if(Request.Query["tag"] != string.Empty)
-            {
-                article = GetArticlesHendler.GetArticlesByTag(Request.Query["tag"], user);
-            }
-            else if(Request.Query["favorited"] != string.Empty)
-            {
-                article = GetArticlesHendler.GetArticlesFavoritedByUser(Request.Query["favorited"], user);
-            }
+            if (author != null)
+                article.AddRange( await GetArticlesHendler.GetArticlesByAuthor(author, user));
+                
+            else if (tag != null)
+                article.AddRange(await GetArticlesHendler.GetArticlesByTag(tag, user));
+                
+            else if (favorited != null)
+                article.AddRange( await GetArticlesHendler.GetArticlesFavoritedByUser(favorited, user));
+            
             else
-            {
-                article = GetArticlesHendler.GetAllArticles(user);
-            }
-            return Ok(new ArticleResponseEnv<List<ArticleResponse>>(article));
-
+                article.AddRange( await GetArticlesHendler.GetAllArticles(user));
+            
+            Task.WaitAll();
+            return Ok(new ArticleResponseEnv<List<ArticleResponse>>( article));
         }
 
         [HttpGet]

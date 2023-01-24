@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Asal\\Desktop\\realworldProject\\realworldProject\\realworldProject\\realworldProject.csproj": {}
+    "C:\\Users\\Asal\\Desktop\\C# demo\\realworldProject\\realworldProject\\realworldProject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Asal\\Desktop\\realworldProject\\realworldProject\\realworldProject\\realworldProject.csproj": {
+    "C:\\Users\\Asal\\Desktop\\C# demo\\realworldProject\\realworldProject\\realworldProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Asal\\Desktop\\realworldProject\\realworldProject\\realworldProject\\realworldProject.csproj",
+        "projectUniqueName": "C:\\Users\\Asal\\Desktop\\C# demo\\realworldProject\\realworldProject\\realworldProject.csproj",
         "projectName": "realworldProject",
-        "projectPath": "C:\\Users\\Asal\\Desktop\\realworldProject\\realworldProject\\realworldProject\\realworldProject.csproj",
+        "projectPath": "C:\\Users\\Asal\\Desktop\\C# demo\\realworldProject\\realworldProject\\realworldProject.csproj",
         "packagesPath": "C:\\Users\\Asal\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Asal\\Desktop\\realworldProject\\realworldProject\\realworldProject\\obj\\",
+        "outputPath": "C:\\Users\\Asal\\Desktop\\C# demo\\realworldProject\\realworldProject\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Asal\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -18,7 +18,7 @@ namespace realworldProject.repos
             return user;
         }
 
-        public static bool isFollowing(MyDatabase context ,string username,string following)
+        public static bool isFollowing(MyDatabase context, string username, string following)
         {
             FollowingModel? result = context.Following.FirstOrDefault(x => (x.Username == username && x.FollowingName == following));
             return result != null;
@@ -40,7 +40,7 @@ namespace realworldProject.repos
         {
             using (var context = new MyDatabase())
             {
-                foreach(var tag in tags)
+                foreach (var tag in tags)
                 {
                     var raw = new ArticlesTags() { Slug = slug, Tagname = tag };
                     context.ArticleTags.Add(raw);
@@ -78,17 +78,17 @@ namespace realworldProject.repos
             return tags;
         }
 
-        public static List<ArticlesModel> GetAllArticles()
+        public static async Task<List<ArticlesModel>> GetAllArticles()
         {
             List<ArticlesModel> articles;
-            using(var context = new MyDatabase())
+            using (var context = new MyDatabase())
             {
-                articles = context.Articles.ToList();
+                articles = await context.Articles.ToListAsync();
             }
             return articles;
         }
 
-        public static ArticleResponse CreateResponse(ArticlesModel article, UserModel user )
+        public static ArticleResponse CreateResponse(ArticlesModel article, UserModel user)
         {
             ArticleResponse resp;
             using (var context = new MyDatabase())
@@ -114,45 +114,47 @@ namespace realworldProject.repos
             }
             return resp;
         }
-        
 
-        public static int NumberOfFavoriets(MyDatabase context,string slug)
-        {            
-            int count = context.Favoriets.Where(x=>x.Slug == slug).Count();
+
+        public static int NumberOfFavoriets(MyDatabase context, string slug)
+        {
+            int count = context.Favoriets.Where(x => x.Slug == slug).Count();
             return count;
         }
-        public static List<ArticlesModel> GetArticlesByAuthor(string author)
+        public static async Task<List<ArticlesModel>> GetArticlesByAuthor(string author)
         {
             List<ArticlesModel> articles;
-            using(var context = new MyDatabase())
+            using (var context = new MyDatabase())
             {
-                articles = context.Articles.Where(x => x.AuthorName == author).ToList();
+                articles = await context.Articles.Where(x => x.AuthorName == author).ToListAsync();
             }
             return articles;
         }
-        public static List<ArticlesModel> GetArticlesFavoritedByUser(string favorited)
+        public static async Task<List<ArticlesModel>> GetArticlesFavoritedByUser(string favorited)
         {
             List<ArticlesModel> articles = new List<ArticlesModel>();
             using (var context = new MyDatabase())
             {
-                var slugs = context.Favoriets.Where(a => a.Username == favorited).Select(a => a.Slug).ToList();
+                var slugs = await context.Favoriets.Where(a => a.Username == favorited).Select(a => a.Slug).ToListAsync();
                 foreach (var slug in slugs)
                 {
-                    articles.Add(context.Articles.FirstOrDefault(x => x.Slug == slug));
+                    var article = await context.Articles.FirstOrDefaultAsync(x => x.Slug == slug);
+                    articles.Add(article);
                 }
                 return articles;
             }
         }
 
-        public static List<ArticlesModel> GetArticlesByTag(string tag)
+        public static async Task<List<ArticlesModel>> GetArticlesByTag(string tag)
         {
             List<ArticlesModel> articles = new List<ArticlesModel>();
             using (var context = new MyDatabase())
             {
-                var slugs = context.ArticleTags.Where(a => a.Tagname == tag).Select(a => a.Slug).ToList();
+                var slugs = await context.ArticleTags.Where(a => a.Tagname == tag).Select(a => a.Slug).ToListAsync();
                 foreach (var slug in slugs)
                 {
-                    articles.Add(context.Articles.FirstOrDefault(x => x.Slug == slug));
+                    var article = await context.Articles.FirstOrDefaultAsync(x => x.Slug == slug);
+                    articles.Add(article);
                 }
                 return articles;
             }
@@ -168,11 +170,11 @@ namespace realworldProject.repos
             return articles;
         }
 
-        public static ArticlesModel FavoriteArticle(string slug,string username)
+        public static ArticlesModel FavoriteArticle(string slug, string username)
         {
             using (var context = new MyDatabase())
             {
-                context.Favoriets.Add(new ArticlesFavoriets() { Username = username,Slug=slug,});
+                context.Favoriets.Add(new ArticlesFavoriets() { Username = username, Slug = slug, });
                 context.SaveChanges();
             }
             var article = GetArticleBySlug(slug);
@@ -181,7 +183,7 @@ namespace realworldProject.repos
 
         public static ArticlesModel UnFavoriteArticle(string slug, string username)
         {
-            
+
             ArticlesFavoriets favorited;
             using (var context = new MyDatabase())
             {
